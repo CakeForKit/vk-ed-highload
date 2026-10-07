@@ -251,6 +251,7 @@ Direct Routing (L3/L4, внутри ЦОД) → L7 (HTTP/gRPC)
 | `avatar_attachments`       | Изображения - аватарки                                                                                                                                                                    |
 | `multipart_uploads`        | Состояние незавершённой загрузки большого файла. `target_attachment_key` — ключ итогового файла, по которому S3 соберёт все части после завершения и положит в `source_video_attachments` |
 | `multipart_parts`          | Номера, размеры и контрольные суммы частей; чтобы продолжить загрузку после обрыва и проверить целостность файла.                                                                         |
+
 ![s3_schema.png](s3_schema.png)
 
 
