@@ -1,0 +1,160 @@
+
+Table users {
+  id bigint [pk]
+  first_name varchar
+  last_name varchar
+  birth_date date [note: 'age is calculated when read']
+  avatar_attachment_key varchar
+  created_at timestamp
+  deleted_at timestamp
+}
+
+Table revoked_tokens {
+  token_id uuid [pk, note: 'JWT jti or token hash']
+  user_id bigint
+  revoked_at timestamp
+  reason varchar
+  expires_at timestamp
+
+  Indexes {
+    (expires_at)
+  }
+}
+
+Table channels {
+  id bigint [pk]
+  owner_id bigint
+  name varchar
+  description text
+  avatar_attachment_key varchar
+  created_at timestamp
+  deleted_at timestamp
+}
+
+Table videos {
+  id bigint [pk]
+  author_id bigint
+  channel_id bigint
+  title varchar
+  description text
+  duration_sec integer
+  visibility varchar [note: 'public, private']
+  status varchar [note: 'uploading, published, deleted']
+  published_at timestamp
+  created_at timestamp
+}
+
+Table video_variants {
+  id bigint [pk]
+  video_id bigint
+  quality varchar [note: '480p, 720p, 1080p, 2160p']
+  codec varchar [note: 'AV1']
+  manifest_attachment_key varchar
+  size_bytes bigint
+  created_at timestamp
+
+  Indexes {
+    (video_id) [unique]
+  }
+}
+
+Table video_previews {
+  id bigint [pk]
+  video_id bigint
+  attachment_key varchar
+  width integer
+  height integer
+  created_at timestamp
+}
+
+Table video_reactions {
+  user_id bigint
+  video_id bigint
+  reaction_type varchar [note: 'like for MVP']
+  created_at timestamp
+
+  Indexes {
+    (user_id, video_id) [pk]
+    (video_id, created_at)
+  }
+}
+
+Table comments {
+  id bigint [pk]
+  video_id bigint
+  author_id bigint
+  parent_comment_id bigint [note: 'null for a top-level comment']
+  body text
+  created_at timestamp
+  deleted_at timestamp
+
+  Indexes {
+    (video_id, created_at)
+    (author_id, created_at)
+  }
+}
+
+Table channel_subscriptions {
+  user_id bigint
+  channel_id bigint
+  created_at timestamp
+
+  Indexes {
+    (user_id, channel_id) [pk]
+    (channel_id, created_at)
+  }
+}
+
+Table video_views {
+  id bigint [pk]
+  video_id bigint
+  viewer_id bigint [note: 'null for an anonymous viewer']
+  watched_sec integer
+  viewed_at timestamp
+
+  Indexes {
+    (video_id, viewed_at)
+    (viewer_id, viewed_at)
+  }
+}
+
+Table video_statistics {
+  video_id bigint [pk]
+  views_count bigint
+  reactions_count bigint
+  comments_count bigint
+  updated_at timestamp
+}
+
+Table recommendation_lists {
+  user_id bigint
+  video_id bigint
+  rank integer [note: 'Позиция в ленте: чем меньше, тем выше видео']
+  score decimal [note: 'Оценка релевантности: чем больше, тем выше приоритет']
+  generated_at timestamp
+  expires_at timestamp
+
+  Indexes {
+    (user_id, video_id) [pk]
+    (user_id, rank) [unique]
+  }
+}
+
+Ref: revoked_tokens.user_id > users.id
+Ref: channels.owner_id > users.id
+Ref: videos.author_id > users.id
+Ref: videos.channel_id > channels.id
+Ref: video_variants.video_id > videos.id
+Ref: video_previews.video_id > videos.id
+Ref: video_reactions.user_id > users.id
+Ref: video_reactions.video_id > videos.id
+Ref: comments.video_id > videos.id
+Ref: comments.author_id > users.id
+Ref: comments.parent_comment_id > comments.id
+Ref: channel_subscriptions.user_id > users.id
+Ref: channel_subscriptions.channel_id > channels.id
+Ref: video_views.video_id > videos.id
+Ref: video_views.viewer_id > users.id
+Ref: video_statistics.video_id > videos.id
+Ref: recommendation_lists.user_id > users.id
+Ref: recommendation_lists.video_id > videos.id

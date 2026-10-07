@@ -1,0 +1,69 @@
+
+Table source_video_attachments {
+  attachment_key varchar [pk, note: 'source/{hash}/{video_id}/original']
+  video_id bigint
+  content_type varchar
+  size_bytes bigint
+  checksum varchar
+  created_at timestamp
+}
+
+Table streaming_manifests {
+  attachment_key varchar [pk, note: 'stream/{hash}/{video_id}/{quality}/{codec}/master.m3u8']
+  video_id bigint
+  quality varchar
+  codec varchar
+  size_bytes bigint
+  created_at timestamp
+}
+
+Table streaming_segments {
+  attachment_key varchar [pk, note: 'stream/{hash}/{video_id}/{quality}/{codec}/segment-{n}.m4s']
+  manifest_attachment_key varchar
+  sequence_no integer
+  size_bytes bigint
+  created_at timestamp
+
+  Indexes {
+    (manifest_attachment_key, sequence_no) [unique]
+  }
+}
+
+Table preview_attachments {
+  attachment_key varchar [pk, note: 'preview/{hash}/{video_id}/{width}x{height}.jpg']
+  video_id bigint
+  width integer
+  height integer
+  size_bytes bigint
+  created_at timestamp
+}
+
+Table avatar_attachments {
+  attachment_key varchar [pk, note: 'avatar/{hash}/{user_id}/{version}.webp']
+  user_id bigint
+  size_bytes bigint
+  created_at timestamp
+}
+
+Table multipart_uploads {
+  upload_id varchar [pk]
+  target_attachment_key varchar
+  video_id bigint
+  initiated_at timestamp
+  expires_at timestamp
+  status varchar [note: 'active, completed, aborted']
+}
+
+Table multipart_parts {
+  upload_id varchar
+  part_no integer
+  size_bytes bigint
+  checksum varchar
+
+  Indexes {
+    (upload_id, part_no) [pk]
+  }
+}
+
+Ref: streaming_segments.manifest_attachment_key > streaming_manifests.attachment_key
+Ref: multipart_parts.upload_id > multipart_uploads.upload_id
