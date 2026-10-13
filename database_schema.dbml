@@ -1,160 +1,146 @@
 
 Table users {
-  id bigint [pk]
+  id uuid [pk]
   first_name varchar
   last_name varchar
   birth_date date [note: 'age is calculated when read']
+  channel_ids uuid[]  [note: 'список каналов на которыми владеет']
+  subscription_ids uuid[] [note: 'список каналов на которые подписан']
   avatar_attachment_key varchar
+  revoked_tokens varchar[] [note: 'список отозванных токенов авторизации']
   created_at timestamp
   deleted_at timestamp
 }
 
-Table revoked_tokens {
-  token_id uuid [pk, note: 'JWT jti or token hash']
-  user_id bigint
-  revoked_at timestamp
-  reason varchar
-  expires_at timestamp
-
-  Indexes {
-    (expires_at)
-  }
+// облегченная версия таблицы пользователя (чтобы показать данные о пользователе например в списке подписок)
+Table user_lite {
+  user_id uuid [pk]
+  first_name varchar
+  last_name varchar
+  avatar_attachment_key varchar
 }
 
 Table channels {
-  id bigint [pk]
-  owner_id bigint
+  id uuid [pk]
+  owner_id uuid
   name varchar
   description text
   avatar_attachment_key varchar
+
+  subscribers user_lite[]
   created_at timestamp
   deleted_at timestamp
 }
 
 Table videos {
-  id bigint [pk]
-  author_id bigint
-  channel_id bigint
+  id uuid [pk]
+  channel_id uuid
   title varchar
   description text
+  preview_key varchar
   duration_sec integer
   visibility varchar [note: 'public, private']
   status varchar [note: 'uploading, published, deleted']
+  tags varchar[]
+
+  video_variants jsonb [note: 'Данные о вариантах качества видео (480р 720р 1080р и т д) и другая мета с ссылкой на обьектное хранилице']
+
+  views_count bigint
+  likes_count bigint
+  dislikes_count bigint
+  comments_count bigint
+  reactions_updated_at timestamp [note: 'не самые актуальные но быстродоступные данные по реакциям пользователей - сюда из video_statistics по job обновляются данные']
+
   published_at timestamp
   created_at timestamp
 }
 
-Table video_variants {
-  id bigint [pk]
-  video_id bigint
-  quality varchar [note: '480p, 720p, 1080p, 2160p']
-  codec varchar [note: 'AV1']
-  manifest_attachment_key varchar
-  size_bytes bigint
-  created_at timestamp
-
-  Indexes {
-    (video_id) [unique]
-  }
-}
-
-Table video_previews {
-  id bigint [pk]
-  video_id bigint
-  attachment_key varchar
-  width integer
-  height integer
-  created_at timestamp
-}
-
-Table video_reactions {
-  user_id bigint
-  video_id bigint
-  reaction_type varchar [note: 'like for MVP']
-  created_at timestamp
-
-  Indexes {
-    (user_id, video_id) [pk]
-    (video_id, created_at)
-  }
-}
-
 Table comments {
-  id bigint [pk]
-  video_id bigint
-  author_id bigint
-  parent_comment_id bigint [note: 'null for a top-level comment']
+  id uuid [pk]
+  video_id uuid
+  user_id uuid
+  parent_comment_id uuid [note: 'null for a top-level comment']
   body text
   created_at timestamp
   deleted_at timestamp
-
-  Indexes {
-    (video_id, created_at)
-    (author_id, created_at)
-  }
-}
-
-Table channel_subscriptions {
-  user_id bigint
-  channel_id bigint
-  created_at timestamp
-
-  Indexes {
-    (user_id, channel_id) [pk]
-    (channel_id, created_at)
-  }
 }
 
 Table video_views {
-  id bigint [pk]
-  video_id bigint
-  viewer_id bigint [note: 'null for an anonymous viewer']
-  watched_sec integer
-  viewed_at timestamp
+  user_id uuid [pk]
+  view_statistic jsonb[] [note: 'для каждого видео (сделать что то типо мапы [video_id]мета_просмотра): когда смотрел, на какой секунде остановил просмотр и т д']
+}
 
-  Indexes {
-    (video_id, viewed_at)
-    (viewer_id, viewed_at)
-  }
+Table video_reactions {
+  user_id uuid [pk]
+  reaction_statistic jsob[] [note: 'для каждого видео (сделать что то типо мапы [video_id]мета_ре): лайк, дизлайк и т д']
 }
 
 Table video_statistics {
-  video_id bigint [pk]
+  video_id uuid [pk]
   views_count bigint
-  reactions_count bigint
+  likes_count bigint
+  dislikes_count bigint
   comments_count bigint
   updated_at timestamp
 }
 
-Table recommendation_lists {
-  user_id bigint
-  video_id bigint
-  rank integer [note: 'Позиция в ленте: чем меньше, тем выше видео']
-  score decimal [note: 'Оценка релевантности: чем больше, тем выше приоритет']
-  generated_at timestamp
-  expires_at timestamp
-
-  Indexes {
-    (user_id, video_id) [pk]
-    (user_id, rank) [unique]
-  }
+Table source_video_attachments {
+  attachment_key varchar [pk, note: 'source/{hash}/{video_id}/original']
+  video_id uuid
+  content_type varchar
+  size_bytes bigint
+  checksum varchar
+  created_at timestamp
 }
 
-Ref: revoked_tokens.user_id > users.id
+Table streaming_manifests {
+  attachment_key varchar [pk, note: 'stream/{hash}/{video_id}/{quality}/{codec}/master.m3u8']
+  video_id uuid
+  quality varchar
+  codec varchar
+  size_bytes bigint
+  created_at timestamp
+}
+
+Table preview_attachments {
+  attachment_key varchar [pk, note: 'preview/{hash}/{video_id}/{width}x{height}.jpg']
+  video_id uuid
+  width integer
+  height integer
+  size_bytes bigint
+  created_at timestamp
+}
+
+Table avatar_attachments {
+  attachment_key varchar [pk, note: 'avatar/{hash}/{user_id}/{version}.webp']
+  user_id uuid
+  size_bytes bigint
+  created_at timestamp
+}
+
+Table multipart_uploads {
+  upload_id varchar [pk]
+  target_attachment_key varchar
+  video_id uuid
+  initiated_at timestamp
+  expires_at timestamp
+  status varchar [note: 'active, completed, aborted']
+}
+
 Ref: channels.owner_id > users.id
-Ref: videos.author_id > users.id
+Ref: channels.subscribers > user_lite.user_id
+
 Ref: videos.channel_id > channels.id
-Ref: video_variants.video_id > videos.id
-Ref: video_previews.video_id > videos.id
-Ref: video_reactions.user_id > users.id
-Ref: video_reactions.video_id > videos.id
 Ref: comments.video_id > videos.id
-Ref: comments.author_id > users.id
+Ref: comments.user_id > user_lite.user_id
 Ref: comments.parent_comment_id > comments.id
-Ref: channel_subscriptions.user_id > users.id
-Ref: channel_subscriptions.channel_id > channels.id
-Ref: video_views.video_id > videos.id
-Ref: video_views.viewer_id > users.id
+
+Ref: users.channel_ids > channels.id
+Ref: users.subscription_ids > channels.id
+
+
+Ref: video_views.user_id > users.id
 Ref: video_statistics.video_id > videos.id
-Ref: recommendation_lists.user_id > users.id
-Ref: recommendation_lists.video_id > videos.id
+Ref: video_reactions.user_id > users.id
+
+
