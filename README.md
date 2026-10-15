@@ -243,8 +243,8 @@ Direct Routing (L3/L4, внутри ЦОД) → L7 (HTTP/gRPC)
 
 | Таблица(-ы) / данные                                                                            | Технология                         |
 |:------------------------------------------------------------------------------------------------|:-----------------------------------|
-| `users`, `channels`, `videos`, `comments`, `video_statistics`, `multipart_uploads` | PostgreSQL                         |
-| `video_views`, `video_reactions`                                                                | ScyllaDB                           |
+| `users`, `channels`, `videos`, `comments`, | PostgreSQL                         |
+| `video_views`, `video_reactions`, `video_statistics`                                                              | ScyllaDB                           |
 | `source_video_attachments`, `streaming_manifests`, `preview_attachments`, `avatar_attachments`  | Ceph Object Storage (RADOS) + Ceph RGW |
 | Кэш и черные списки токенов авторизации                                                         | Redis Cluster                      |
 | Взаимодействие сервисов между собой                                                             | Apache Kafka                       |
