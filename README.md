@@ -255,7 +255,7 @@ Direct Routing (L3/L4, внутри ЦОД) → L7 (HTTP/gRPC)
 
 - ScyllaDB хранит данные по partition key и хорошо подходит для очень большого потока простых операций вида «записать/прочитать по известному ключу». А к таблицам  `video_views`, `video_reactions` как раз будет только поток запросов по ключам `user_id`, `video_id`.
 
-- Видеофайлы, HLS-манифесты, превью и аватары хранятся в **Ceph Object Storage (RADOS)**. Приложение и CDN обращаются к нему через **Ceph Object Gateway (RGW)** по S3 API; RGW поддерживает multipart upload. Доставка видео выполняется через CDN.
+- Видеофайлы, HLS-манифесты, превью и аватары хранятся в Ceph Object Storage (RADOS). Приложение и CDN обращаются к нему через Ceph Object Gateway (RGW) по S3 API; RGW поддерживает multipart upload. Доставка видео выполняется через CDN.
 
 ### Индексы
 
