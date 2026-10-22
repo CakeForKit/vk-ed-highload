@@ -58,7 +58,7 @@ Table videos {
 Table comments {
   id uuid [pk]
   video_id uuid
-  user_id uuid
+  user_lite uuid
   parent_comment_id uuid [note: 'null for a top-level comment']
   body text
   created_at timestamp
@@ -132,7 +132,7 @@ Ref: channels.subscribers > user_lite.user_id
 
 Ref: videos.channel_id > channels.id
 Ref: comments.video_id > videos.id
-Ref: comments.user_id > user_lite.user_id
+Ref: comments.user_lite > user_lite.user_id
 Ref: comments.parent_comment_id > comments.id
 
 Ref: users.channel_ids > channels.id
