@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="Страница-1" id="A6c2wVsGTS-M-9hP7DW8">
-    <mxGraphModel dx="2148" dy="1610" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="1835" dy="1068" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -40,8 +40,10 @@
         <mxCell id="azfniWPCG1pEiUXJxM8X-26" edge="1" parent="1" source="azfniWPCG1pEiUXJxM8X-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="azfniWPCG1pEiUXJxM8X-11">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="1070" y="780.06" />
-              <mxPoint x="1070" y="840.06" />
+              <mxPoint x="1070" y="780" />
+              <mxPoint x="1070" y="810" />
+              <mxPoint x="1200" y="810" />
+              <mxPoint x="1200" y="840" />
             </Array>
           </mxGeometry>
         </mxCell>
@@ -67,7 +69,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="azfniWPCG1pEiUXJxM8X-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;fillColor=#e1d5e7;strokeColor=#9673a6;" value="&amp;nbsp;service&lt;div&gt;Видео-data&lt;/div&gt;" vertex="1">
-          <mxGeometry height="60" width="120" x="920" y="550" as="geometry" />
+          <mxGeometry height="60" width="120" x="950" y="550" as="geometry" />
         </mxCell>
         <mxCell id="azfniWPCG1pEiUXJxM8X-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;fillColor=#ffe6cc;strokeColor=#d79b00;" value="&lt;span style=&quot;color: rgb(31, 35, 40); font-family: &amp;quot;Mona Sans VF&amp;quot;, -apple-system, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, &amp;quot;Noto Sans Backtick Fix&amp;quot;, &amp;quot;Noto Sans&amp;quot;, Helvetica, Arial, sans-serif, &amp;quot;Apple Color Emoji&amp;quot;, &amp;quot;Segoe UI Emoji&amp;quot;; font-size: 16px; text-align: -webkit-left;&quot;&gt;Ceph&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(31, 35, 40); font-family: &amp;quot;Mona Sans VF&amp;quot;, -apple-system, BlinkMacSystemFont, &amp;quot;Segoe UI&amp;quot;, &amp;quot;Noto Sans Backtick Fix&amp;quot;, &amp;quot;Noto Sans&amp;quot;, Helvetica, Arial, sans-serif, &amp;quot;Apple Color Emoji&amp;quot;, &amp;quot;Segoe UI Emoji&amp;quot;; font-size: 16px; text-align: -webkit-left;&quot;&gt;Превью видео&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="60" width="120" x="1380" y="940" as="geometry" />
@@ -88,6 +90,9 @@
           <mxGeometry height="60" width="120" x="710" y="630" as="geometry" />
         </mxCell>
         <mxCell id="azfniWPCG1pEiUXJxM8X-31" edge="1" parent="1" source="azfniWPCG1pEiUXJxM8X-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="azfniWPCG1pEiUXJxM8X-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="adjF5whTlw2SRMkXHRob-3" edge="1" parent="1" source="azfniWPCG1pEiUXJxM8X-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="azfniWPCG1pEiUXJxM8X-16">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="azfniWPCG1pEiUXJxM8X-28" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="API&lt;div&gt;Просмор видео&lt;/div&gt;" vertex="1">
