@@ -8,16 +8,8 @@ Table users {
   subscription_ids uuid[] [note: 'список каналов на которые подписан']
   avatar_attachment_key varchar
   revoked_tokens varchar[] [note: 'список отозванных токенов авторизации']
-  created_at timestamp
-  deleted_at timestamp
-}
-
-// облегченная версия таблицы пользователя (чтобы показать данные о пользователе например в списке подписок)
-Table user_lite {
-  user_id uuid [pk]
-  first_name varchar
-  last_name varchar
-  avatar_attachment_key varchar
+  blocked bool
+  session jsonb
 }
 
 Table channels {
@@ -25,6 +17,7 @@ Table channels {
   owner_id uuid
   name varchar
   description text
+  subscribers_count bigint
   avatar_attachment_key varchar
 
   created_at timestamp
@@ -33,7 +26,7 @@ Table channels {
 
 Table subscribtions {
   channel_id uuid
-  subscribers user_lite[]
+  subscriber uuid
 
   created_at timestamp
   deleted_at timestamp
@@ -69,6 +62,11 @@ Table comments {
   user_lite uuid
   parent_comment_id uuid [note: 'null for a top-level comment']
   body text
+
+  user_id uuid
+  user_first_name varchar
+  user_last_name varchar
+  user_avatar_attachment_ley varchar
   created_at timestamp
   deleted_at timestamp
 }
@@ -132,13 +130,13 @@ Table multipart_uploads {
 }
 
 Ref: channels.owner_id > users.id
-Ref: subscribtions.subscribers > user_lite.user_id
+Ref: subscribtions.subscriber > users.id
 Ref: subscribtions.channel_id > channels.id
 
 
 Ref: videos.channel_id > channels.id
 Ref: comments.video_id > videos.id
-Ref: comments.user_lite > user_lite.user_id
+Ref: comments.user_id > users.id
 Ref: comments.parent_comment_id > comments.id
 
 Ref: users.channel_ids > channels.id
