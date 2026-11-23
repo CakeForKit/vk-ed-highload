@@ -174,3 +174,9 @@ Table dwh_events {
   received_at timestamp
   payload jsonb
 }
+
+Table popular_videos {
+  video_id uuid
+  rank integer [note: 'Позиция видео в списке: чем меньше, тем выше']
+}
+Ref: popular_videos.video_id > videos.id
