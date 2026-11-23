@@ -153,14 +153,14 @@ Table video_embeddings {
   updated_at timestamp
 }
 
-Table user_interests {
+Table user_embeddings {
   user_id uuid [pk]
   embedding float[]
   updated_at timestamp
 }
 
 Ref: video_embeddings.video_id > videos.id
-Ref: user_interests.user_id > users.id
+Ref: user_embeddings.user_id > users.id
 
 
 Table dwh_events {
