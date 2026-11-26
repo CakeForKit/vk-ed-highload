@@ -153,6 +153,12 @@ Table video_embeddings {
   updated_at timestamp
 }
 
+Table video_search_index {
+  video_id uuid [pk]
+  embedding float[]
+  updated_at timestamp
+}
+
 Table user_embeddings {
   user_id uuid [pk]
   embedding float[]
@@ -160,6 +166,7 @@ Table user_embeddings {
 }
 
 Ref: video_embeddings.video_id > videos.id
+Ref: video_search_index.video_id - videos.id
 Ref: user_embeddings.user_id > users.id
 
 
